@@ -113,6 +113,8 @@
 <div class="post-title">{% trans "People" %}</div>
 <div class="post-content">
 {%for group in subscriber_groups %}
+<div class="groupname">{{group.name}}</div>
+<div class="group">
 {% for feed in group.subscriber_set.all %}
 <span class="{% cycle 'subs1' 'subs2' %}">
 <a href="{{ feed.feed.feed_url }}"
@@ -126,6 +128,7 @@ title="{% trans "feed" %}"
 title="{{ feed.feed.title }}">{{ feed.name }}</a> <a href="{{ feed.feed.link }}">{% trans "website" %}</a>
 </span> | 
 {% endfor %}
+</div>
 {% endfor %}
 </div>
 </div>

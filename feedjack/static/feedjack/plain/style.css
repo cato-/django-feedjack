@@ -261,3 +261,12 @@ span.url a:hover {
 .subs1 {
 	background-color: #ddd;
 }
+div.group {
+    border: thin solid #6E9C60;
+    padding: 3px;
+    margin-bottom: 5px;
+}
+div.groupname{
+    background-color: #6E9C60;
+    margin-bottom: 2ex;
+}
