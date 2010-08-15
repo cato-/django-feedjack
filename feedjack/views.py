@@ -128,7 +128,7 @@ def atomfeed(request, tag=None, user=None):
     """
     return buildfeed(request, feedgenerator.Atom1Feed, tag, user)
 
-def mainview(request, tag=None, user=None, group=None):
+def mainview(request, tag=None, user=None, group=None, newer=None):
     """ View that handles all page requests.
     """
 
@@ -136,7 +136,7 @@ def mainview(request, tag=None, user=None, group=None):
     if response:
         return response
 
-    ctx = fjlib.page_context(request, site, tag, user, group, (sfeeds_obj, \
+    ctx = fjlib.page_context(request, site, tag, user, group, newer, (sfeeds_obj, \
       sfeeds_ids))
 
     response = render_to_response('feedjack/%s/post_list.html' % \
