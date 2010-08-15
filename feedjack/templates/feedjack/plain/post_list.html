@@ -112,7 +112,8 @@
 <div class="post subscriber">
 <div class="post-title">{% trans "People" %}</div>
 <div class="post-content">
-{% for feed in subscribers %}
+{%for group in subscriber_groups %}
+{% for feed in group.subscriber_set.all %}
 <span class="{% cycle 'subs1' 'subs2' %}">
 <a href="{{ feed.feed.feed_url }}"
 {% if feed.feed.last_modified %}
@@ -124,6 +125,7 @@ title="{% trans "feed" %}"
 <a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}"
 title="{{ feed.feed.title }}">{{ feed.name }}</a> <a href="{{ feed.feed.link }}">{% trans "website" %}</a>
 </span> | 
+{% endfor %}
 {% endfor %}
 </div>
 </div>
