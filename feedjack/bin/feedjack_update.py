@@ -52,7 +52,11 @@ def prints(tstr):
 def mtime(ttime):
     """ datetime auxiliar function.
     """
-    return datetime.datetime.fromtimestamp(time.mktime(ttime))
+    if ttime:
+        return datetime.datetime.fromtimestamp(time.mktime(ttime))
+    else:
+        print "Fallback, ttime is None"
+        return datetime.datetime.fromtimestamp(time.time())
 
 class ProcessEntry:
     def __init__(self, feed, options, entry, postdict, fpf):
