@@ -113,6 +113,7 @@
 <div class="post-title">{% trans "People" %}</div>
 <div class="post-content">
 {%for group in subscriber_groups %}
+{%if group.subscriber_set.count > 0 %}
 <div class="groupname">{{group.name}}</div>
 <div class="group">
 {% for feed in group.subscriber_set.all %}
@@ -129,7 +130,14 @@ title="{{ feed.feed.title }}">{{ feed.name }}</a> <a href="{{ feed.feed.link }}"
 </span> | 
 {% endfor %}
 </div>
+{%endif%}
 {% endfor %}
+{%if request.user.is_authenticated %}
+<div class="groupname">Admin</div>
+<div class="group">
+<a href="/admin/feedjack/subscriber/add/">add Subscriber</a>
+</div>
+{%endif%}
 </div>
 </div>
 </body>

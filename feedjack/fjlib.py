@@ -282,6 +282,7 @@ def page_context(request, site, tag=None, user_id=None, group_id=None, newer=Non
         'previous': page - 1,
         'pages': paginator.pages,
         'hits' : paginator.hits,
+        'request': request,
     }
     get_extra_content(site, sfeeds_ids, ctx)
     from feedjack import fjcloud
