@@ -179,8 +179,12 @@
 
 <h4>{% trans "People" %}</h4>
 
+<ul>
+{% for group in subscriber_groups %}
+<li class="groupname"><a href="{{ site.url }}/group/{{group.id}}">{{group.name}}</a></li>
+<li>
 <ul class="suscriptores">
-{% for feed in subscribers %}
+{% for feed in group.subscriber_set.all %}
 <li>
 <a href="{{ feed.feed.feed_url }}"
 {% if feed.feed.last_modified %}
@@ -192,6 +196,9 @@ title="{% trans "feed" %}"
 <img src="{{ media_url }}/img/feed.png" alt="feed"></a>
 <a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}"
 title="{{ feed.feed.title }}">{{ feed.name }}</a></li>
+{% endfor %}
+</ul>
+</li>
 {% endfor %}
 </ul>
 

@@ -39,6 +39,8 @@ urlpatterns = patterns('',
     (r'^user/(?P<user>\d+)/$', views.mainview),
     (r'^tag/(?P<tag>.*)/$', views.mainview),
 
+    (r'^group/(?P<group>\d+)/$', views.mainview),
+
     (r'^opml/$', views.opml),
     (r'^foaf/$', views.foaf),
     (r'^$', views.mainview),
