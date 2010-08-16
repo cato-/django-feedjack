@@ -116,7 +116,7 @@ def get_extra_content(site, sfeeds_ids, ctx):
         try:
             ctx['last_modified'] = basefeeds.filter(\
               last_checked__isnull=False).order_by(\
-              '-last_checked').select_related()[0].last_checked.ctime()
+              '-last_checked').select_related()[0].last_checked
 
         except:
             ctx['last_modified'] = '??'
