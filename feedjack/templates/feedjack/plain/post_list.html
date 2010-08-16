@@ -114,7 +114,7 @@
 <div class="post-content">
 {%for group in subscriber_groups %}
 {%if group.subscriber_set.count > 0 %}
-<div class="groupname">{{group.name}}</div>
+<div class="groupname"><a href="/group/{{group.id}}/">{{group.name}}</a></div>
 <div class="group">
 {% for feed in group.subscriber_set.all %}
 <span class="{% cycle 'subs1' 'subs2' %}">
