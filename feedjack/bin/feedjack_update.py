@@ -188,9 +188,9 @@ class ProcessEntry:
             if not date_modified and self.fpf:
                 # if the feed has no date_modified info, we use the feed
                 # mtime or the current time
-                if self.fpf.feed.has_key('modified_parsed'):
+                if self.fpf.feed.has_key('modified_parsed') and self.fpf.feed.modified_parsed:
                     date_modified = mtime(self.fpf.feed.modified_parsed)
-                elif self.fpf.has_key('modified'):
+                elif self.fpf.has_key('modified') and self.fpf.modified:
                     date_modified = mtime(self.fpf.modified)
             if not date_modified:
                 date_modified = datetime.datetime.now()
