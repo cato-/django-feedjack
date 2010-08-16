@@ -89,24 +89,29 @@ div.date {
     border-left: 0;
     margin-bottom: 10px;    
 }
-div.avatar {
+div.avatar, div.groupname {
     text-align: left;
     background-color: #6E9C60;
     color: #FFFFFF;
     padding: 0.5em;
     font-size: large;
 }
-div.avatar a {
+div.avatar a, div.groupname a {
 	text-decoration: none;
 }
-div.avatar a:hover {
+div.avatar a:hover, div.groupname a:hover {
 	text-decoration: underline;
+}
+
+div.groupname {
+	font-size: medium;
+	font-weight: bold;
 }
 
 div.sep {
     border-bottom: 12px solid #6E9C60;
 }
-div.avatar a {
+div.avatar a, div.groupname a {
 	color: white;
 }
 
@@ -296,8 +301,5 @@ div.group {
     border: thin solid #6E9C60;
     padding: 3px;
     margin-bottom: 2ex;
-}
-div.groupname{
-    background-color: #6E9C60;
-    margin-bottom: 5px;
+    margin-top: 1ex;
 }

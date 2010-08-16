@@ -108,12 +108,12 @@
 <div id="footer">
 <div class="post-title">{% trans "People" %}</div>
 <div class="post-content">
-{%for group in subscriber_groups %}
-{%if group.subscriber_set.count > 0 %}
+{% for group in subscriber_groups %}
+{% if group.subscriber_set %}
 <div class="groupname"><a href="/group/{{group.id}}/">{{group.name}}</a></div>
 <div class="group">
 {% for feed in group.subscriber_set.all %}
-<span><a href="{{ feed.feed.link }}">{% trans "website" %}</a> (<a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}" title="{{ feed.feed.title }}">{{ feed.name }}</a>, <a href="{{ feed.feed.feed_url }}" {% if feed.feed.last_modified %}title="{% blocktrans with feed.feed.last_modified as last_modified %}feed (last modified: {{ last_modified }}){% endblocktrans %}"{% else %}title="{% trans "feed" %}"{% endif %}>{% trans "feed" %}</a>)</span>
+<span><a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}" title="{{ feed.feed.title }}">{{ feed.name }}</a> (<a href="{{ feed.feed.link }}">{% trans "website" %}</a>, <a href="{{ feed.feed.feed_url }}" {% if feed.feed.last_modified %}title="{% blocktrans with feed.feed.last_modified as last_modified %}feed (last modified: {{ last_modified }}){% endblocktrans %}"{% else %}title="{% trans "feed" %}"{% endif %}>{% trans "feed" %}</a>)</span>
 {% endfor %}
 </div>
 {% endif %}
