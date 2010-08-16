@@ -169,6 +169,7 @@ class Post(models.Model):
 class Subscriber(models.Model):
     site = models.ForeignKey(Site, verbose_name=_('site') )
     feed = models.ForeignKey(Feed, verbose_name=_('feed') )
+    group = models.ForeignKey('Group', verbose_name=_('group'), null=True, blank=True )
 
     name = models.CharField(_('name'), max_length=100, null=True, blank=True,
         help_text=_('Keep blank to use the Feed\'s original name.') )
@@ -198,6 +199,12 @@ class Subscriber(models.Model):
         if not self.shortname:
             self.shortname = self.feed.shortname
         super(Subscriber, self).save()
+
+class Group(models.Model):
+    name=models.CharField(_('name'), max_length=100)
+    parent=models.ForeignKey('Group', verbose_name=_('parent group'), blank=True, null=True)
+    def __unicode__(self):
+        return u'Group: "%s"'%self.name
 
 
 #~

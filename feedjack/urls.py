@@ -39,6 +39,9 @@ urlpatterns = patterns('',
     (r'^user/(?P<user>\d+)/$', views.mainview),
     (r'^tag/(?P<tag>.*)/$', views.mainview),
 
+    (r'^group/(?P<group>\d+)/$', views.mainview),
+    (r'^newer/(?P<newer>[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2})/$', views.mainview),
+
     (r'^opml/$', views.opml),
     (r'^foaf/$', views.foaf),
     (r'^$', views.mainview),

@@ -13,6 +13,8 @@ from feedjack import models
 
 class LinkAdmin(admin.ModelAdmin):
     pass
+class GroupAdmin(admin.ModelAdmin):
+    pass
 
 
 
@@ -52,6 +54,7 @@ class SubscriberAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.Link, LinkAdmin)
+admin.site.register(models.Group, GroupAdmin)
 admin.site.register(models.Site, SiteAdmin)
 admin.site.register(models.Feed, FeedAdmin)
 admin.site.register(models.Post, PostAdmin)

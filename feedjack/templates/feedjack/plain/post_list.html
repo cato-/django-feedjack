@@ -108,9 +108,32 @@
 <div id="footer">
 <div class="post-title">{% trans "People" %}</div>
 <div class="post-content">
-{% for feed in subscribers %}
-<span class="{% cycle 'subs1' 'subs2' %}"><a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}" title="{{ feed.feed.title }}">{{ feed.name }}</a> (<a href="{{ feed.feed.link }}">{% trans "website" %}</a>, <a href="{{ feed.feed.feed_url }}" {% if feed.feed.last_modified %} title="{% blocktrans with feed.feed.last_modified as last_modified %}feed (last modified: {{ last_modified }}){% endblocktrans %}"{% else %}title="{% trans "feed" %}"{% endif %}>{% trans "feed" %}</a>)</span> 
+{%for group in subscriber_groups %}
+{%if group.subscriber_set.count > 0 %}
+<div class="groupname">{{group.name}}</div>
+<div class="group">
+{% for feed in group.subscriber_set.all %}
+<span class="{% cycle 'subs1' 'subs2' %}">
+<a href="{{ feed.feed.feed_url }}"
+{% if feed.feed.last_modified %}
+title="{% blocktrans with feed.feed.last_modified as last_modified %}feed (last modified: {{ last_modified }}){% endblocktrans %}"
+{% else %}
+title="{% trans "feed" %}"
+{% endif %}
+>{% trans "feed" %}</a>
+<a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}"
+title="{{ feed.feed.title }}">{{ feed.name }}</a> <a href="{{ feed.feed.link }}">{% trans "website" %}</a>
+</span> | 
 {% endfor %}
+</div>
+{%endif%}
+{% endfor %}
+{%if request.user.is_authenticated %}
+<div class="groupname">Admin</div>
+<div class="group">
+<a href="/admin/feedjack/subscriber/add/">add Subscriber</a>
+</div>
+{%endif%}
 </div>
 </div>
 </body>

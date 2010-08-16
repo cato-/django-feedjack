@@ -292,3 +292,12 @@ span.url a:hover {
 	border: none;
 	border-top: 1px dashed black;
 }
+div.group {
+    border: thin solid #6E9C60;
+    padding: 3px;
+    margin-bottom: 2ex;
+}
+div.groupname{
+    background-color: #6E9C60;
+    margin-bottom: 5px;
+}

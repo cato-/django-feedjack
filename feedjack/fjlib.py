@@ -14,6 +14,7 @@ from django.utils.encoding import smart_unicode
 
 from feedjack import models
 from feedjack import fjcache
+from datetime import datetime
 
 
 # this is taken from django, it was removed in r8191
@@ -204,7 +205,7 @@ def getcurrentsite(http_post, path_info, query_string):
 
     return hostdict[url], pagecachekey
 
-def get_paginator(site, sfeeds_ids, page=0, tag=None, user=None):
+def get_paginator(site, sfeeds_ids, page=0, tag=None, user=None, group=None, newer=None):
     """ Returns a paginator object and a requested page from it.
     """
 
@@ -222,6 +223,19 @@ def get_paginator(site, sfeeds_ids, page=0, tag=None, user=None):
             localposts = localposts.filter(feed=user)
         except:
             raise Http404
+    if group:
+        group=int(group)
+        try:
+            if group==0:
+                localposts = localposts.filter(feed__subscriber__group__isnull=True)
+            else:
+                localposts = localposts.filter(feed__subscriber__group__id=group)
+        except Exception, e:
+            print e
+            raise Http404
+    if newer:
+        localposts = localposts.filter(date_created__gt=newer)
+
     if site.order_posts_by == 2:
         localposts = localposts.order_by('-date_created', '-date_modified')
     else:
@@ -238,7 +252,7 @@ def get_paginator(site, sfeeds_ids, page=0, tag=None, user=None):
             raise Http404
     return (paginator, object_list)
 
-def page_context(request, site, tag=None, user_id=None, sfeeds=None):
+def page_context(request, site, tag=None, user_id=None, group_id=None, newer=None, sfeeds=None):
     """ Returns the context dictionary for a page view.
     """
     sfeeds_obj, sfeeds_ids = sfeeds
@@ -247,7 +261,7 @@ def page_context(request, site, tag=None, user_id=None, sfeeds=None):
     except ValueError:
         page = 0
     paginator, object_list = get_paginator(site, sfeeds_ids, \
-      page=page, tag=tag, user=user_id)
+      page=page, tag=tag, user=user_id, newer=newer, group=group_id)
     if object_list:
         # This will hit the DB once per page instead of once for every post in
         # a page. To take advantage of this the template designer must call
@@ -268,6 +282,7 @@ def page_context(request, site, tag=None, user_id=None, sfeeds=None):
         'previous': page - 1,
         'pages': paginator.pages,
         'hits' : paginator.hits,
+        'request': request,
     }
     get_extra_content(site, sfeeds_ids, ctx)
     from feedjack import fjcloud
@@ -275,7 +290,12 @@ def page_context(request, site, tag=None, user_id=None, sfeeds=None):
     ctx['user_id'] = user_id
     ctx['user'] = user_obj
     ctx['tag'] = tag_obj
-    ctx['subscribers'] = sfeeds_obj
+    #ctx['subscribers'] = sfeeds_obj.filter(group__isnull=True)
+    groups=set()
+    for feed in sfeeds_obj:
+        groups.add(feed.group)
+    ctx['subscriber_groups'] = list(groups)
+    ctx['subscriber_groups'] += [{'name': 'ungrouped', 'subscriber_set': sfeeds_obj.filter(group__isnull=True), 'id': 0}]
     return ctx
 
 
