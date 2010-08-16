@@ -52,11 +52,7 @@ def prints(tstr):
 def mtime(ttime):
     """ datetime auxiliar function.
     """
-    if ttime:
-        return datetime.datetime.fromtimestamp(time.mktime(ttime))
-    else:
-        print "Fallback, ttime is None"
-        return datetime.datetime.fromtimestamp(time.time())
+    return datetime.datetime.fromtimestamp(time.mktime(ttime))
 
 class ProcessEntry:
     def __init__(self, feed, options, entry, postdict, fpf):
@@ -127,7 +123,7 @@ class ProcessEntry:
             content = self.entry.get('summary',
                                      self.entry.get('description', ''))
         
-        if self.entry.has_key('modified_parsed'):
+        if self.entry.has_key('modified_parsed') and self.entry.modified_parsed:
             date_modified = mtime(self.entry.modified_parsed)
         else:
             date_modified = None
