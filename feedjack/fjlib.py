@@ -283,6 +283,10 @@ def page_context(request, site, tag=None, user_id=None, group_id=None, newer=Non
         'pages': paginator.pages,
         'hits' : paginator.hits,
         'request': request,
+        'yesterday': (datetime.today()-timedelta(1)).strftime("%Y-%m-%d"),
+        'last_week': (datetime.today()-timedelta(7)).strftime("%Y-%m-%d"),
+        '10dayago':  (datetime.today()-timedelta(10)).strftime("%Y-%m-%d"),
+        '30daysago': (datetime.today()-timedelta(30)).strftime("%Y-%m-%d"),
     }
     get_extra_content(site, sfeeds_ids, ctx)
     from feedjack import fjcloud
