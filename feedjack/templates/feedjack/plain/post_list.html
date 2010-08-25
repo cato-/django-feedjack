@@ -48,7 +48,7 @@
 </div>
 
 <div id="content">
-
+{% load pretty_html %}
 {% for item in object_list %}
 
   {% ifchanged %}
@@ -66,7 +66,7 @@
   <div class="post">
   <div class="post-title">» <a href="{{ item.link }}">{% if item.title %}{{ item.title }}{% else %}{{ item.subscriber.name }}{% endif %}</a></div>
   <div class="post-content">
-    <p>{{ item.content|safe }}</p>
+    <p>{{ item.content|prettyhtml|safe }}</p>
     <div class="post-meta">
       <a href="{{ item.link }}">
       {% if item.author %}{% blocktrans with item.author as author %}by {{ author }} at{% endblocktrans %}{% endif %}
@@ -120,10 +120,10 @@
 {% endfor %}
 <div class="groupname">new posts</div>
 <div class="group">
-<a href="/since/{{yesterday}}/">since yesterday</a>
-<a href="/since/{{last_week}}/">since last week</a>
-<a href="/since/{{10daysago}}/">since 10 days ago</a>
-<a href="/since/{{30daysago}}/">since 30 days ago</a>
+<a href="/since/{{ yesterday }}/">since yesterday</a>
+<a href="/since/{{ last_week }}/">since last week</a>
+<a href="/since/{{ 10daysago }}/">since 10 days ago</a>
+<a href="/since/{{ 30daysago }}/">since 30 days ago</a>
 </div>
 </div>
 {% if request.user.is_authenticated %}
