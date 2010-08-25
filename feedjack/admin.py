@@ -36,7 +36,9 @@ class FeedAdmin(admin.ModelAdmin):
                    'last_checked'),
         })
     )
-    search_fields = ['feed_url', 'name', 'title']
+    search_fields = ('feed_url', 'name', 'title')
+    list_filter=('last_modified',)
+    date_hierarchy = 'last_modified'
 
 
 
@@ -51,6 +53,7 @@ class PostAdmin(admin.ModelAdmin):
 class SubscriberAdmin(admin.ModelAdmin):
     list_display = ('name', 'site', 'feed')
     list_filter = ('site',)
+    search_fields=('name', 'feed')
 
 
 admin.site.register(models.Link, LinkAdmin)
