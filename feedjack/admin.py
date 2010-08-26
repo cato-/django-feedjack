@@ -56,7 +56,7 @@ class PostAdmin(admin.ModelAdmin):
 class SubscriberAdmin(admin.ModelAdmin):
     list_display = ('name', 'site', 'feed')
     list_filter = ('site',)
-    search_fields=('name', 'feed')
+    search_fields=('name',)
 
 
 admin.site.register(models.Link, LinkAdmin)

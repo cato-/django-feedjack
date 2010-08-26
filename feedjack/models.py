@@ -173,7 +173,7 @@ class Subscriber(models.Model):
 
     name = models.CharField(_('name'), max_length=100, null=True, blank=True,
         help_text=_('Keep blank to use the Feed\'s original name.') )
-    shortname = models.CharField(_('shortname'), max_length=50, null=True,
+    shortname = models.SlugField(_('shortname'), max_length=50, null=True,
       blank=True,
       help_text=_('Keep blank to use the Feed\'s original shortname.') )
     is_active = models.BooleanField(_('is active'), default=True,
