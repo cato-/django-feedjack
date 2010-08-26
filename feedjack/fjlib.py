@@ -234,7 +234,7 @@ def get_paginator(site, sfeeds_ids, page=0, tag=None, user=None, group=None, new
             print e
             raise Http404
     if newer:
-        localposts = localposts.filter(date_created__gt=newer)
+        localposts = localposts.filter(date_modified__gt=newer)
 
     if site.order_posts_by == 2:
         localposts = localposts.order_by('-date_created', '-date_modified')
