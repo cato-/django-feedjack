@@ -44,6 +44,7 @@ urlpatterns = patterns('',
 
     (r'^opml/$', views.opml),
     (r'^foaf/$', views.foaf),
+    (r'^feedtitle/$', views.feedtitle),
     (r'^$', views.mainview),
 )
 

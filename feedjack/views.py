@@ -17,6 +17,9 @@ from feedjack import models
 from feedjack import fjlib
 from feedjack import fjcache
 
+import feedparser
+import json
+
 def initview(request):
     """ Retrieves the basic data needed by all feeds (host, feeds, etc)
 
@@ -148,6 +151,15 @@ def mainview(request, tag=None, user=None, group=None, newer=None):
     if site.use_internal_cache:
         fjcache.cache_set(site, cachekey, response)
     return response
+
+def feedtitle(request):
+    if not "url" in request.GET:
+        return HttpResponse('""')
+    else:
+        try:
+            return HttpResponse(json.write(feedparser.parse(request.GET['url']).feed.title), mimetype="text/plain")
+        except Exception, e: #404, not a feed, etc.
+            return HttpResponse(repr(e))
 
 #~
 

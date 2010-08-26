@@ -40,6 +40,8 @@ class FeedAdmin(admin.ModelAdmin):
     list_filter=('last_modified',)
     date_hierarchy = 'last_modified'
     prepopulated_fields = {"shortname": ("name",)}
+    class Media:
+        js = ('feedjack/load_feed_name.js',)
 
 
 
