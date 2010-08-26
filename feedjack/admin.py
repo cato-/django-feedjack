@@ -39,6 +39,7 @@ class FeedAdmin(admin.ModelAdmin):
     search_fields = ('feed_url', 'name', 'title')
     list_filter=('last_modified',)
     date_hierarchy = 'last_modified'
+    prepopulated_fields = {"shortname": ("name",)}
 
 
 

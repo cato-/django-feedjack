@@ -96,7 +96,7 @@ class Feed(models.Model):
     feed_url = models.URLField(_('feed url'), unique=True)
 
     name = models.CharField(_('name'), max_length=100)
-    shortname = models.CharField(_('shortname'), max_length=50)
+    shortname = models.SlugField(_('shortname'), max_length=50)
     is_active = models.BooleanField(_('is active'), default=True,
         help_text=_('If disabled, this feed will not be further updated.') )
 
