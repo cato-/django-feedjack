@@ -14,7 +14,7 @@ from django.utils.encoding import smart_unicode
 
 from feedjack import models
 from feedjack import fjcache
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # this is taken from django, it was removed in r8191
