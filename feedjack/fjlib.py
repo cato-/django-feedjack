@@ -15,6 +15,7 @@ from django.utils.encoding import smart_unicode
 from feedjack import models
 from feedjack import fjcache
 from datetime import datetime, timedelta
+import re
 
 
 # this is taken from django, it was removed in r8191
@@ -234,6 +235,14 @@ def get_paginator(site, sfeeds_ids, page=0, tag=None, user=None, group=None, new
             print e
             raise Http404
     if newer:
+        named={
+        'yesterday': (datetime.today()-timedelta(1)).strftime("%Y-%m-%d"),
+        'last_week': (datetime.today()-timedelta(7)).strftime("%Y-%m-%d"),
+        '10dayago':  (datetime.today()-timedelta(10)).strftime("%Y-%m-%d"),
+        '30daysago': (datetime.today()-timedelta(30)).strftime("%Y-%m-%d"),
+        }
+        if newer in named:
+            newer=named[newer]
         localposts = localposts.filter(date_modified__gt=newer)
 
     if site.order_posts_by == 2:
@@ -283,10 +292,6 @@ def page_context(request, site, tag=None, user_id=None, group_id=None, newer=Non
         'pages': paginator.pages,
         'hits' : paginator.hits,
         'request': request,
-        'yesterday': (datetime.today()-timedelta(1)).strftime("%Y-%m-%d"),
-        'last_week': (datetime.today()-timedelta(7)).strftime("%Y-%m-%d"),
-        '10dayago':  (datetime.today()-timedelta(10)).strftime("%Y-%m-%d"),
-        '30daysago': (datetime.today()-timedelta(30)).strftime("%Y-%m-%d"),
     }
     get_extra_content(site, sfeeds_ids, ctx)
     from feedjack import fjcloud

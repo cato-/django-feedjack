@@ -40,7 +40,7 @@ urlpatterns = patterns('',
     (r'^tag/(?P<tag>.*)/$', views.mainview),
 
     (r'^group/(?P<group>\d+)/$', views.mainview),
-    (r'^since/(?P<newer>[0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2})/$', views.mainview),
+    (r'^since/(?P<newer>([0-9]{4,4}-[0-9]{2,2}-[0-9]{2,2}|yesterday|last_week|10daysago|30daysago))/$', views.mainview),
 
     (r'^opml/$', views.opml),
     (r'^foaf/$', views.foaf),
