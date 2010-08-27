@@ -314,7 +314,8 @@ class ProcessFeed:
             except:
                 (etype, eobj, etb) = sys.exc_info()
                 print '[%d] ! -------------------------' % (self.feed.id,)
-                print traceback.format_exception(etype, eobj, etb)
+                for line in traceback.format_exception(etype, eobj, etb):
+                    print line
                 traceback.print_exception(etype, eobj, etb)
                 print '[%d] ! -------------------------' % (self.feed.id,)
                 ret_entry = ENTRY_ERR
@@ -380,7 +381,8 @@ class Dispatcher:
         except:
             (etype, eobj, etb) = sys.exc_info()
             print '[%d] ! -------------------------' % (feed.id,)
-            print traceback.format_exception(etype, eobj, etb)
+            for line in traceback.format_exception(etype, eobj, etb):
+                print line
             traceback.print_exception(etype, eobj, etb)
             print '[%d] ! -------------------------' % (feed.id,)
             ret_feed = FEED_ERREXC
@@ -391,12 +393,20 @@ class Dispatcher:
             comment = u' (SLOW FEED!)'
         else:
             comment = u''
-        prints(u'[%d] Processed %s in %s [%s] [%s]%s' % (
-            feed.id, feed.feed_url, unicode(delta),
-            self.feed_trans[ret_feed],
-            u' '.join(u'%s=%d' % (self.entry_trans[key],
-                      ret_entries[key]) for key in self.entry_keys),
-            comment))
+        try:
+            prints(u'[%d] Processed %s in %s [%s] [%s]%s' % (
+                feed.id, feed.feed_url, unicode(delta),
+                self.feed_trans[ret_feed],
+                    u' '.join(u'%s=%d' % (self.entry_trans[key],
+                          ret_entries[key]) for key in self.entry_keys),
+                comment))
+        except:
+            (etype, eobj, etb) = sys.exc_info()
+            print '[%d] ! -------------------------' % (feed.id,)
+            for line in traceback.format_exception(etype, eobj, etb):
+                print line
+            traceback.print_exception(etype, eobj, etb)
+            print '[%d] ! -------------------------' % (feed.id,)
 
         self.feed_stats[ret_feed] += 1
         for key, val in ret_entries.items():
