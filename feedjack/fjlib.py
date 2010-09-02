@@ -15,6 +15,7 @@ from django.utils.encoding import smart_unicode
 from feedjack import models
 from feedjack import fjcache
 from datetime import datetime, timedelta
+from time import strftime
 import re
 
 
@@ -292,6 +293,7 @@ def page_context(request, site, tag=None, user_id=None, group_id=None, newer=Non
         'pages': paginator.pages,
         'hits' : paginator.hits,
         'request': request,
+        'now': strftime("%Y-%m-%d %H:%M"),
     }
     get_extra_content(site, sfeeds_ids, ctx)
     from feedjack import fjcloud
