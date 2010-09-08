@@ -1,0 +1,2 @@
+upgrading from Feedjack 0.9.16, feedjack got group support. this means subscriber got a new field group.
+you need to syncdb (install groups table) and then add  "INT(11) group_id" to your feedjack_subscriber table in the database.
