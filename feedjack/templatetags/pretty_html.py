@@ -7,7 +7,7 @@ register=template.Library()
 @register.filter
 @stringfilter
 def prettyhtml(value, autoescape=None):
-    value=str(soup(value).prettify())
+    value=str(soup(value))
     if autoescape and not isinstance(value, SafeData):
         from django.utils.html import escape
         value = escape(value)
