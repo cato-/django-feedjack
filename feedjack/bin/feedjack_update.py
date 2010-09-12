@@ -118,11 +118,11 @@ class ProcessEntry:
             # this should be optional~
             author_email = 'nospam@nospam.com'
         
-        try:
+        if hasattr(self.entry, 'content'):
             content = self.entry.content[0].value
-        except:
+        else:
             content = self.entry.get('summary',
-                                     self.entry.get('description', ''))
+                self.entry.get('description', ''))
         
         if self.entry.has_key('modified_parsed') and self.entry.modified_parsed:
             date_modified = mtime(self.entry.modified_parsed)
