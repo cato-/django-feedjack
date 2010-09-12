@@ -386,8 +386,9 @@ class Dispatcher:
                 print line
             traceback.print_exception(etype, eobj, etb)
             print '[%d] ! -------------------------' % (feed.id,)
-            ret_feed = FEED_ERREXC
-            ret_entries = {}
+            return #because of this error we cannot continue anyway
+            #ret_feed = FEED_ERREXC
+            #ret_entries = {}
 
         delta = datetime.datetime.now() - start_time
         if delta.seconds > SLOWFEED_WARNING:
