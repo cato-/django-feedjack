@@ -30,17 +30,18 @@ ENTRY_NEW, ENTRY_UPDATED, ENTRY_SAME, ENTRY_ERR = range(4)
 FEED_OK, FEED_SAME, FEED_ERRPARSE, FEED_ERRHTTP, FEED_ERREXC = range(5)
 
 
-def encode(tstr):
-    """ Encodes a unicode string in utf-8
-    """
-    if not tstr:
-        return ''
-    # this is _not_ pretty, but it works
-    try:
-        return tstr.encode('utf-8', "xmlcharrefreplace")
-    except UnicodeDecodeError:
-        # it's already UTF8.. sigh
-        return tstr.decode('utf-8').encode('utf-8')
+#XXX: DEAD CODE?
+#def encode(tstr):
+#    """ Encodes a unicode string in utf-8
+#    """
+#    if not tstr:
+#        return ''
+#    # this is _not_ pretty, but it works
+#    try:
+#        return tstr.encode('utf-8', "xmlcharrefreplace")
+#    except UnicodeDecodeError:
+#        # it's already UTF8.. sigh
+#        return tstr.decode('utf-8').encode('utf-8')
 
 def prints(tstr):
     """ lovely unicode
