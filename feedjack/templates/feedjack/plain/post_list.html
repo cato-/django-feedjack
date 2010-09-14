@@ -64,7 +64,7 @@
 
 
   <div class="post">
-  <div class="post-title">» <a href="{{ item.link }}">{% if item.title %}{{ item.title }}{% else %}{{ item.subscriber.name }}{% endif %}</a></div>
+  <div class="post-title">» <a href="{{ item.link }}">{% if item.title %}{{ item.title|safe }}{% else %}{{ item.subscriber.name }}{% endif %}</a></div>
   <div class="post-content">
     <p>{{ item.content|prettyhtml|safe }}</p>
     <div class="post-meta">
