@@ -115,7 +115,8 @@ class Feed(models.Model):
         ordering = ('name', 'feed_url',)
 
     def __unicode__(self):
-        return u'%s (%s)' % (self.name, self.feed_url)
+        return u'%s (%s)' %\
+            (unicode(self.name, errors='replace'), unicode(self.feed_url, errors='replace'))
 
     def save(self):
         super(Feed, self).save()
@@ -156,7 +157,7 @@ class Post(models.Model):
         unique_together = (('feed', 'guid'),)
 
     def __unicode__(self):
-        return self.title
+        return unicode(self.title, errors='replace')
 
     def save(self):
         super(Post, self).save()
@@ -187,7 +188,8 @@ class Subscriber(models.Model):
         unique_together = (('site', 'feed'),)
 
     def __unicode__(self):
-        return u'%s in %s' % (self.feed, self.site)
+        return u'%s in %s' %\
+            (unicode(self.feed), unicode(self.site))
 
     def get_cloud(self):
         from feedjack import fjcloud
