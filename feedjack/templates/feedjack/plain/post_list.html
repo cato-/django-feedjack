@@ -14,7 +14,7 @@
 	<meta name="generator" content="Feedjack">
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
 	<link rel="stylesheet" type="text/css" href="{{ media_url }}/style.css" />
-        <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="{{ site.url }}/feed/rss/" />
+        <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="/feed/rss/" />
         {% block extrastyle %}{% endblock %}
         {% block extrahead %}{% endblock %}
         <title>{{ site.title }}</title>
@@ -24,7 +24,7 @@
 <body>
 <div id="head">
     <div id="logo">
-        <h1><a href="{{ site.url }}/">{{ site.name }}</a></h1>
+        <h1><a href="/">{{ site.name }}</a></h1>
 	{% trans "Last update" %}: <b>{{ last_modified|date:"l, d. F Y, G:i:s" }}</b>
     </div>
 </div>
@@ -73,7 +73,7 @@
       {{ item.date_modified|date:"H:i" }}</a>
       {% for tag in item.qtags %}
           {% if forloop.first %}{% trans "under" %}{% endif %}
-          <a href="{{ site.url }}/tag/{{ tag.name }}">{{ tag.name }}</a>
+          <a href="/tag/{{ tag.name }}">{{ tag.name }}</a>
           {% if not forloop.last %}, {% endif %}
       {% endfor %}
       {% if item.comments %}
@@ -113,7 +113,7 @@
 <div class="groupname"><a href="/group/{{group.id}}/">{{group.name}}</a></div>
 <div class="group">
 {% for feed in group.subscriber_set.all %}
-<span><a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}" title="{{ feed.feed.title }}">{{ feed.name }}</a> (<a href="{{ feed.feed.link }}">{% trans "website" %}</a>, <a href="{{ feed.feed.feed_url }}" {% if feed.feed.last_modified %}title="{% blocktrans with feed.feed.last_modified as last_modified %}feed (last modified: {{ last_modified }}){% endblocktrans %}"{% else %}title="{% trans "feed" %}"{% endif %}>{% trans "feed" %}</a>)</span>
+<span><a class="nombre" href="/user/{{ feed.feed.id }}" title="{{ feed.feed.title }}">{{ feed.name }}</a> (<a href="{{ feed.feed.link }}">{% trans "website" %}</a>, <a href="{{ feed.feed.feed_url }}" {% if feed.feed.last_modified %}title="{% blocktrans with feed.feed.last_modified as last_modified %}feed (last modified: {{ last_modified }}){% endblocktrans %}"{% else %}title="{% trans "feed" %}"{% endif %}>{% trans "feed" %}</a>)</span>
 {% endfor %}
 </div>
 {% endif %}
