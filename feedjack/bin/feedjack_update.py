@@ -195,10 +195,14 @@ class ProcessEntry:
                     date_modified = mtime(self.fpf.modified)
             if not date_modified:
                 date_modified = datetime.datetime.now()
-            tobj = models.Post(feed=self.feed, title=title, link=link,
-                content=content, guid=guid, date_modified=date_modified,
-                author=author, author_email=author_email,
-                comments=comments)
+            # post already in DB?
+            try:
+                tobj = models.Post.objects.get(feed=self.feed, guid=guid)
+            except models.Post.DoesNotExist:
+                tobj = models.Post(feed=self.feed, title=title, link=link,
+                    content=content, guid=guid, date_modified=date_modified,
+                    author=author, author_email=author_email,
+                    comments=comments)
             tobj.save()
             [tobj.tags.add(tcat) for tcat in fcat]
         return retval
