@@ -8,6 +8,7 @@ fjlib.py
 
 from django.conf import settings
 from django.db import connection
+from django.db.models import Min
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.utils.encoding import smart_unicode
@@ -299,7 +300,7 @@ def page_context(request, site, tag=None, user_id=None, group_id=None, newer=Non
         'pages': paginator.pages,
         'hits' : paginator.hits,
         'request': request,
-        'now': strftime("%Y-%m-%d %H:%M"),
+        'now': sfeeds_obj.aggregate(last_checked=Min("feed__last_checked"))['last_checked'].strftime("%Y-%m-%d %H:%M"),
     }
     get_extra_content(site, sfeeds_ids, ctx)
     from feedjack import fjcloud
