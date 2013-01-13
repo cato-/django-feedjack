@@ -258,6 +258,8 @@ class ProcessFeed:
                     prints('[%d] Feed has not changed since ' \
                            'last check: %s' % (self.feed.id,
                                                self.feed.feed_url))
+                self.feed.last_checked = datetime.datetime.now()
+                self.feed.save()
                 return FEED_SAME, ret_values
 
             if self.fpf.status >= 400:
@@ -265,6 +267,8 @@ class ProcessFeed:
                 prints('[%d] !HTTP_ERROR! %d: %s' % (self.feed.id,
                                                      self.fpf.status,
                                                      self.feed.feed_url))
+                self.feed.last_checked = datetime.datetime.now()
+                self.feed.save()
                 return FEED_ERRHTTP, ret_values
 
         if hasattr(self.fpf, 'bozo') and self.fpf.bozo:
