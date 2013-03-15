@@ -157,6 +157,7 @@ def feedtitle(request):
         return HttpResponse('""')
     else:
         try:
+            #FIXME: do not make http-calls in frontend
             return HttpResponse(json.write(feedparser.parse(request.GET['url']).feed.title), mimetype="text/plain")
         except Exception, e: #404, not a feed, etc.
             return HttpResponse(repr(e))
