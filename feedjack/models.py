@@ -20,7 +20,7 @@ SITE_ORDERBY_CHOICES = (
 
 class Link(models.Model):
     name = models.CharField(_('name'), max_length=100, unique=True)
-    link = models.URLField(_('link'), verify_exists=True)
+    link = models.URLField(_('link'))
 
     class Meta:
         verbose_name = _('link')
