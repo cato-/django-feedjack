@@ -11,6 +11,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _ 
 from django.utils.encoding import smart_unicode
 
+from autoslug import AutoSlugField
+
 from feedjack import fjcache
 
 SITE_ORDERBY_CHOICES = (
@@ -96,7 +98,13 @@ class Feed(models.Model):
     feed_url = models.URLField(_('feed url'), unique=True)
 
     name = models.CharField(_('name'), max_length=100)
-    shortname = models.SlugField(_('shortname'), max_length=50)
+    slug = AutoSlugField(populate_from='name', always_update=True)
+
+    @property
+    def shortname(self):
+        raise DeprecationWarning("Replace Feed.shortname with Feed.slug")
+        return self.slug
+
     is_active = models.BooleanField(_('is active'), default=True,
         help_text=_('If disabled, this feed will not be further updated.') )
 
@@ -116,10 +124,6 @@ class Feed(models.Model):
 
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.feed_url)
-
-    def save(self):
-        super(Feed, self).save()
-
 
 
 class Tag(models.Model):
@@ -173,9 +177,13 @@ class Subscriber(models.Model):
 
     name = models.CharField(_('name'), max_length=100, null=True, blank=True,
         help_text=_('Keep blank to use the Feed\'s original name.') )
-    shortname = models.SlugField(_('shortname'), max_length=50, null=True,
-      blank=True,
-      help_text=_('Keep blank to use the Feed\'s original shortname.') )
+    slug = AutoSlugField(populate_from='name', always_update=True)
+
+    @property
+    def shortname(self):
+        raise DeprecationWarning("Replace Feed.shortname with Feed.slug")
+        return self.slug
+
     is_active = models.BooleanField(_('is active'), default=True,
         help_text=_('If disabled, this subscriber will not appear in the site or '
         'in the site\'s feed.') )
@@ -194,12 +202,10 @@ class Subscriber(models.Model):
         from feedjack import fjcloud
         return fjcloud.getcloud(self.site, self.feed.id)
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if not self.name:
             self.name = self.feed.name
-        if not self.shortname:
-            self.shortname = self.feed.shortname
-        super(Subscriber, self).save()
+        super(Subscriber, self).save(*args, **kwargs)
 
 class Group(models.Model):
     name=models.CharField(_('name'), max_length=100)

@@ -29,7 +29,7 @@ class FeedAdmin(admin.ModelAdmin):
       'is_active')
     fieldsets = (
       (None,
-        {'fields':('feed_url', 'name', 'shortname', 'is_active')}),
+        {'fields':('feed_url', 'name', 'is_active')}),
       (_('Fields updated automatically by Feedjack'),
         {'classes':('collapse',),
          'fields':('title', 'tagline', 'link', 'etag', 'last_modified',
@@ -39,7 +39,6 @@ class FeedAdmin(admin.ModelAdmin):
     search_fields = ('feed_url', 'name', 'title')
     list_filter=('last_modified',)
     date_hierarchy = 'last_modified'
-    prepopulated_fields = {"shortname": ("name",)}
     class Media:
         js = ('feedjack/load_feed_name.js',)
 
