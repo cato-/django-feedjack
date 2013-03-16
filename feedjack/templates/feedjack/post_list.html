@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% load i18n %}
+{% block js %}
+    {{ block.super }}
+    <script src="{{ STATIC_URL }}/js/jquery.js"></script>
+    <script src="{{ STATIC_URL }}/endless_pagination/js/endless-pagination.js"></script>
+{% endblock %}
+{% block content %}
+<div class="endless_page_template">
+{% include "feedjack/post.html" %}
+</div>
+    <script>$.endlessPaginate({paginateOnScroll: true, paginateOnScrollMargin: 20});</script>
+{% endblock content %}
