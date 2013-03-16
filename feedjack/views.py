@@ -11,7 +11,7 @@ from django.utils import feedgenerator
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.utils.cache import patch_vary_headers
-from django.template import Context, loader
+from django.template import RequestContext, loader
 
 from feedjack import models
 from feedjack import fjlib
@@ -63,7 +63,7 @@ def blogroll(request, btype):
     template = loader.get_template('feedjack/%s.xml' % btype)
     ctx = {}
     fjlib.get_extra_content(site, sfeeds_ids, ctx)
-    ctx = Context(ctx)
+    ctx = RequestContext(request, ctx)
     response = HttpResponse(template.render(ctx) , \
       mimetype='text/xml; charset=utf-8')
 
@@ -139,8 +139,8 @@ def mainview(request, tag=None, user=None, group=None, newer=None, asc=None):
     if response:
         return response
 
-    ctx = fjlib.page_context(request, site, tag, user, group, newer, asc, (sfeeds_obj, \
-      sfeeds_ids))
+    ctx = RequestContext(request, fjlib.page_context(request, site, tag, user, group, newer, asc, (sfeeds_obj, \
+      sfeeds_ids)))
 
     response = render_to_response('feedjack/%s/post_list.html' % \
       (site.template), ctx)

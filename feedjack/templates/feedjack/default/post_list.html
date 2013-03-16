@@ -13,7 +13,7 @@
 	<meta name="description" content="Feedjack" />
 	<meta name="generator" content="Feedjack">
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8">
-	<link rel="stylesheet" type="text/css" href="{{ media_url }}/style.css" />
+	<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}feedjack/default/style.css" />
         <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="{{ site.url }}/feed/rss/" />
         {% block extrastyle %}{% endblock %}
         {% block extrahead %}{% endblock %}
@@ -52,12 +52,12 @@
 </div>
 
     <div id="buttons">
-      <a href="{{ site.url }}/feed/rss/" title="RSS 2.0 feed"><img src="{{ media_url }}/img/button-rss.png"/></a> &bull;   
+      <a href="{{ site.url }}/feed/rss/" title="RSS 2.0 feed"><img src="{{ STATIC_URL }}feedjack/default/img/button-rss.png"/></a> &bull;   
       <a href="http://www.djangoproject.com/"><img src="http://media.djangoproject.com/img/badges/djangosite80x15.gif" border="0" alt="A Django site." title="A Django site."></a> &bull;
-      <img src="{{ media_url }}/img/button-hacker.png"/><br/>
-      <a href="{{ site.url }}/feed/atom/" title="Atom 1.0 feed"><img src="{{ media_url }}/img/button-atom.png"/></a> &bull; 
-      <a href="{{ site.url }}/opml/" title="OPML"><img src="{{ media_url }}/img/button-opml.png"/></a> &bull; 
-      <a href="{{ site.url }}/foaf/" title="FOAF"><img src="{{ media_url }}/img/button-foaf.png"/></a>
+      <img src="{{ STATIC_URL }}feedjack/default/img/button-hacker.png"/><br/>
+      <a href="{{ site.url }}/feed/atom/" title="Atom 1.0 feed"><img src="{{ STATIC_URL }}feedjack/default/img/button-atom.png"/></a> &bull; 
+      <a href="{{ site.url }}/opml/" title="OPML"><img src="{{ STATIC_URL }}feedjack/default/img/button-opml.png"/></a> &bull; 
+      <a href="{{ site.url }}/foaf/" title="FOAF"><img src="{{ STATIC_URL }}feedjack/default/img/button-foaf.png"/></a>
     </div>
 
 {% if user %}
@@ -193,7 +193,7 @@ title="{% blocktrans with feed.feed.last_modified as last_modified %}feed (last 
 title="{% trans "feed" %}"
 {% endif %}
 >
-<img src="{{ media_url }}/img/feed.png" alt="feed"></a>
+<img src="{{ STATIC_URL }}feedjack/default/img/feed.png" alt="feed"></a>
 <a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}"
 title="{{ feed.feed.title }}">{{ feed.name }}</a></li>
 {% endfor %}
