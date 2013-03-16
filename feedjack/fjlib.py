@@ -288,6 +288,7 @@ def page_context(request, site, tag=None, user_id=None, group_id=None, newer=Non
           user_id, tag)
     else:
         user_obj, tag_obj = None, None
+    last_checked = sfeeds_obj.aggregate(last_checked=Min("feed__last_checked"))['last_checked']
     ctx = {
         'object_list': object_list,
         'is_paginated': paginator.pages > 1,
@@ -300,7 +301,7 @@ def page_context(request, site, tag=None, user_id=None, group_id=None, newer=Non
         'pages': paginator.pages,
         'hits' : paginator.hits,
         'request': request,
-        'now': sfeeds_obj.aggregate(last_checked=Min("feed__last_checked"))['last_checked'].strftime("%Y-%m-%d %H:%M"),
+        'now': last_checked.strftime("%Y-%m-%d %H:%M") if last_checked else None,
     }
     get_extra_content(site, sfeeds_ids, ctx)
     from feedjack import fjcloud
