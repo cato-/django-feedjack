@@ -15,6 +15,14 @@ from autoslug import AutoSlugField
 
 from feedjack import fjcache
 
+
+from django.contrib.auth.models import User
+
+
+class FeedjackUser(models.Model):
+    user = models.OneToOneField(User)
+    site = models.ForeignKey('Site')
+
 SITE_ORDERBY_CHOICES = (
     (1, _('Date published.')),
     (2, _('Date the post was first obtained.'))

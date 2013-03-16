@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     url(r'^feed/rss/user/(?P<user>\d+)/$', views.rssfeed),
     url(r'^feed/rss/tag/(?P<tag>.*)/$', views.rssfeed),
 
+    url(r'^settings/feed/new/$', newviews.CreateSubscriber.as_view(), name="settings-feedcreate"),
 
     url(r'^posts/$', newviews.PostView.as_view(), name="post-all"),
 
