@@ -115,8 +115,7 @@ class Feed(models.Model):
         ordering = ('name', 'feed_url',)
 
     def __unicode__(self):
-        return u'%s (%s)' %\
-            (unicode(self.name, errors='replace'), unicode(self.feed_url, errors='replace'))
+        return u'%s (%s)' % (self.name, self.feed_url)
 
     def save(self):
         super(Feed, self).save()
@@ -157,7 +156,7 @@ class Post(models.Model):
         unique_together = (('feed', 'guid'),)
 
     def __unicode__(self):
-        return unicode(self.title, errors='replace')
+        return self.title
 
     def save(self):
         super(Post, self).save()
