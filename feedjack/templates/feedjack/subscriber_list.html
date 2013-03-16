@@ -1,0 +1,10 @@
+{% extends "feedjack/settings-base.html" %}{% load i18n %}
+{% block content %}
+<h2>{% trans "List of Feeds" %}</h2>
+<a href="{% url "settings-feedcreate" %}">{% trans "Add new Feed" %}</a>
+<ul>
+{% for object in object_list %}
+<li>{{ object }}
+{% endfor %}
+</ul>
+{% endblock %}

@@ -34,3 +34,10 @@ class CreateSubscriber(CreateView):
         form.instance.feed = feed
         form.instance.site = get_current_site(self.request)
         return super(CreateSubscriber, self).form_valid(form)
+
+class SubscriberList(ListView):
+    model = Subscriber
+
+    def get_queryset(self):
+        qs = super(SubscriberList, self).get_queryset()
+        return qs.filter(site=get_current_site(self.request))
