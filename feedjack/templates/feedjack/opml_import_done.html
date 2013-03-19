@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+
+{% block content %}
+<h1>{% trans "OPML Import" %}</h1>
+<p>{% blocktrans %}We imported the following feeds into your account:{% endblocktrans %}</p>
+<ul>
+{% for feed in feeds %}
+<li>{{ feed.feed }}{% if not feed.created %}({% trans "Using existing feed" %}){% endif %}
+{% endfor %}
+</ul>
+{% endblock %}

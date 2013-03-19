@@ -10,7 +10,7 @@ from django.conf.urls import patterns, url
 from django.views.generic.base import RedirectView
 
 from feedjack import views
-from feedjack import newviews
+from feedjack import newviews, forms
 
 urlpatterns = patterns('',
     url(r'^rss20.xml$', RedirectView.as_view(url='/feed/rss/')),
@@ -31,6 +31,7 @@ urlpatterns = patterns('',
 
     url(r'^settings/feed/new/$', newviews.CreateSubscriber.as_view(), name="settings-feedcreate"),
     url(r'^settings/feed/$', newviews.SubscriberList.as_view(), name="settings-feedlist"),
+    url(r'^settings/import/opml/$', newviews.OPMLImport.as_view(form_list = [forms.OPMLUploadForm, forms.OPMLEntrySet]), name="settings-import-opml"),
 
     url(r'^posts/$', newviews.PostView.as_view(), name="post-all"),
 
