@@ -103,7 +103,7 @@ class Site(models.Model):
 
 
 class Feed(models.Model):
-    feed_url = models.URLField(_('feed url'), unique=True, max_length=2000)
+    feed_url = models.URLField(_('feed url'), unique=True, max_length=255)
 
     name = models.CharField(_('name'), max_length=100)
     slug = AutoSlugField(populate_from='name', always_update=True)
