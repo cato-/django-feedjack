@@ -19,7 +19,7 @@ class Migration(SchemaMigration):
         db.alter_column(u'feedjack_post', 'link', self.gf('django.db.models.fields.URLField')(max_length=2000))
 
         # Changing field 'Feed.feed_url'
-        db.alter_column(u'feedjack_feed', 'feed_url', self.gf('django.db.models.fields.URLField')(unique=True, max_length=2000))
+        db.alter_column(u'feedjack_feed', 'feed_url', self.gf('django.db.models.fields.URLField')(unique=True, max_length=255))
 
         # Changing field 'Feed.link'
         db.alter_column(u'feedjack_feed', 'link', self.gf('django.db.models.fields.URLField')(max_length=2000))

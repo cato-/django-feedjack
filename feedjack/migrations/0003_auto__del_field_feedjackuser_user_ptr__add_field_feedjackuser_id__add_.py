@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'FeedjackUser.id'
         db.add_column(u'feedjack_feedjackuser', u'id',
-                      self.gf('django.db.models.fields.AutoField')(default=0, primary_key=True),
+                      self.gf('django.db.models.fields.AutoField')(primary_key=True),
                       keep_default=False)
 
         # Adding field 'FeedjackUser.user'
