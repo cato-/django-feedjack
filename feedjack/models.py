@@ -30,7 +30,7 @@ SITE_ORDERBY_CHOICES = (
 
 class Link(models.Model):
     name = models.CharField(_('name'), max_length=100, unique=True)
-    link = models.URLField(_('link'))
+    link = models.URLField(_('link'), max_length=2000)
 
     class Meta:
         verbose_name = _('link')
@@ -103,7 +103,7 @@ class Site(models.Model):
 
 
 class Feed(models.Model):
-    feed_url = models.URLField(_('feed url'), unique=True)
+    feed_url = models.URLField(_('feed url'), unique=True, max_length=2000)
 
     name = models.CharField(_('name'), max_length=100)
     slug = AutoSlugField(populate_from='name', always_update=True)
@@ -118,7 +118,7 @@ class Feed(models.Model):
 
     title = models.CharField(_('title'), max_length=200, blank=True)
     tagline = models.TextField(_('tagline'), blank=True)
-    link = models.URLField(_('link'), blank=True)
+    link = models.URLField(_('link'), blank=True, max_length=2000)
 
     # http://feedparser.org/docs/http-etag.html
     etag = models.CharField(_('etag'), max_length=50, blank=True)
@@ -151,13 +151,13 @@ class Tag(models.Model):
 class Post(models.Model):
     feed = models.ForeignKey(Feed, verbose_name=_('feed'), null=False, blank=False)
     title = models.CharField(_('title'), max_length=255)
-    link = models.URLField(_('link'), )
+    link = models.URLField(_('link'), max_length=2000)
     content = models.TextField(_('content'), blank=True)
     date_modified = models.DateTimeField(_('date modified'), null=True, blank=True)
     guid = models.CharField(_('guid'), max_length=200, db_index=True)
     author = models.CharField(_('author'), max_length=50, blank=True)
     author_email = models.EmailField(_('author email'), blank=True)
-    comments = models.URLField(_('comments'), blank=True)
+    comments = models.URLField(_('comments'), blank=True, max_length=2000)
     tags = models.ManyToManyField(Tag, verbose_name=_('tags'))
     date_created = models.DateField(_('date created'), auto_now_add=True)
 
