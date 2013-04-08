@@ -130,13 +130,13 @@ def get_extra_content(site, sfeeds_ids, ctx):
     ctx['site'] = site
     ctx['media_url'] = '%s/feedjack/%s' % (settings.MEDIA_URL, site.template)
 
-def get_posts_tags(object_list, sfeeds_obj, user_id, tag_name):
+def get_posts_tags(object_list, sfeeds_obj, subscription_id, tag_name):
     """ Adds a qtags property in every post object in a page.
     
     Use "qtags" instead of "tags" in templates to avoid innecesary DB hits.
     """
     tagd = {}
-    user_obj = None
+    subscription_obj = None
     tag_obj = None
     tags = models.Tag.objects.extra(\
       select={'post_id':'%s.%s' % (\
@@ -168,9 +168,12 @@ def get_posts_tags(object_list, sfeeds_obj, user_id, tag_name):
         else:
             post.qtags = []
         post.subscriber = subd[post.feed.id]
-        if user_id and int(user_id) == post.feed.id:
-            user_obj = post.subscriber
-    return user_obj, tag_obj
+        # TODO: subscription_id should be a slug specific for the subscription
+        # of the feed at one site, which is resolved to a global feed for the content
+        # urls, filter, etc. should be specific to the subscription, not to the feed
+        if not subscription_id is None and int(subscription_id) == post.feed.id:
+            subscription_obj = post.subscriber
+    return subscription_obj, tag_obj
 
 def getcurrentsite(http_post, path_info, query_string):
     """ Returns the site id and the page cache key based on the request.
@@ -208,7 +211,7 @@ def getcurrentsite(http_post, path_info, query_string):
 
     return hostdict[url], pagecachekey
 
-def get_paginator(site, sfeeds_ids, page=0, tag=None, user=None, group=None, newer=None, asc=False):
+def get_paginator(site, sfeeds_ids, page=0, tag=None, subscription=None, group=None, newer=None, asc=False):
     """ Returns a paginator object and a requested page from it.
     """
 
@@ -221,9 +224,11 @@ def get_paginator(site, sfeeds_ids, page=0, tag=None, user=None, group=None, new
     else:
         localposts = models.Post.objects.filter(feed__in=sfeeds_ids)
 
-    if user:
+    if not subscription is None:
         try:
-            localposts = localposts.filter(feed=user)
+            # TODO: later subscription will be no feed, 
+            # but a Subscription object
+            localposts = localposts.filter(feed=subscription)
         except:
             raise Http404
     if group:
@@ -269,7 +274,7 @@ def get_paginator(site, sfeeds_ids, page=0, tag=None, user=None, group=None, new
             raise Http404
     return (paginator, object_list)
 
-def page_context(request, site, tag=None, user_id=None, group_id=None, newer=None, asc=None, sfeeds=None):
+def page_context(request, site, tag=None, subscription_id=None, group_id=None, newer=None, asc=None, sfeeds=None):
     """ Returns the context dictionary for a page view.
     """
     sfeeds_obj, sfeeds_ids = sfeeds
@@ -278,16 +283,16 @@ def page_context(request, site, tag=None, user_id=None, group_id=None, newer=Non
     except ValueError:
         page = 0
     paginator, object_list = get_paginator(site, sfeeds_ids, \
-      page=page, tag=tag, user=user_id, newer=newer, asc=asc, group=group_id)
+      page=page, tag=tag, subscription=subscription_id, newer=newer, asc=asc, group=group_id)
     if object_list:
         # This will hit the DB once per page instead of once for every post in
         # a page. To take advantage of this the template designer must call
         # the qtags property in every item, instead of the default tags
         # property.
-        user_obj, tag_obj = get_posts_tags(object_list, sfeeds_obj, \
-          user_id, tag)
+        subscription_obj, tag_obj = get_posts_tags(object_list, sfeeds_obj, \
+          subscription_id, tag)
     else:
-        user_obj, tag_obj = None, None
+        subscription_obj, tag_obj = None, None
     last_checked = sfeeds_obj.aggregate(last_checked=Min("feed__last_checked"))['last_checked']
     ctx = {
         'object_list': object_list,
@@ -305,9 +310,9 @@ def page_context(request, site, tag=None, user_id=None, group_id=None, newer=Non
     }
     get_extra_content(site, sfeeds_ids, ctx)
     from feedjack import fjcloud
-    ctx['tagcloud'] = fjcloud.getcloud(site, user_id)
-    ctx['user_id'] = user_id
-    ctx['user'] = user_obj
+    ctx['tagcloud'] = fjcloud.getcloud(site, subscription_id)
+    ctx['subscription_id'] = subscription_id 
+    ctx['subscription'] = subscription_obj
     ctx['tag'] = tag_obj
     #ctx['subscribers'] = sfeeds_obj.filter(group__isnull=True)
     groups=set()

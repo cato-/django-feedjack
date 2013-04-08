@@ -42,8 +42,8 @@
 {% if has_next %}
 <li><a href="?page={{ next }}">&gt;&gt;</a></li>
 {% endif %}
-{% if user %}
-<li class="username"><a href="{{ user.feed.link }}">{{ user.name }}</a>{% trans "talks about" %} »</li>
+{% if subscription %}
+<li class="username"><a href="{{ subscription.feed.link }}">{{ subscription.name }}</a>{% trans "talks about" %} »</li>
 {% endif %}
 {% if tag %}
 <li class="tagname">{{ tag.name }}</li>
@@ -60,13 +60,13 @@
       <a href="{{ site.url }}/foaf/" title="FOAF"><img src="{{ STATIC_URL }}feedjack/default/img/button-foaf.png"/></a>
     </div>
 
-{% if user %}
+{% if subscription %}
 <div id="usertags">
     <ul>
     {% for tag in tagcloud %}
       <li><a
-      {% if user_id %}
-      href="{{ site.url }}/user/{{ user_id }}/tag/{{ tag.tagname|urlencode }}/"
+      {% if subscription_id %}
+      href="{{ site.url }}/subscription/{{ subscription_id }}/tag/{{ tag.tagname|urlencode }}/"
       {% else %}
       href="{{ site.url }}/tag/{{ tag.tagname|urlencode }}/"
       {% endif %}
@@ -104,7 +104,7 @@
       <ul>
         {% for tag in item.subscriber.get_cloud %}
         <li><a
-          href="{{ site.url }}/user/{{ item.subscriber.feed.id }}/tag/{{ tag.tagname|urlencode}}/"
+          href="{{ site.url }}/subscription/{{ item.subscriber.feed.id }}/tag/{{ tag.tagname|urlencode}}/"
           title="{% blocktrans count tag.count as posts %}{{ posts }} post{% plural %}{{ posts }} posts{% endblocktrans %}"
           class="cloud_{{ tag.weight }}">{{ tag.tagname }}</a></li>
         {% endfor %}
@@ -148,8 +148,8 @@
 {{ site.welcome|safe }}
 
 <h4>
-{% if user_id %}
-  {% blocktrans with user.name as person %}What {{ person }} talks about{% endblocktrans %}
+{% if subscription_id %}
+  {% blocktrans with subscription.name as person %}What {{ person }} talks about{% endblocktrans %}
 {% else %}
   {% blocktrans %}What people talk about{% endblocktrans %}
 {% endif %}
@@ -159,8 +159,8 @@
     <ul id="cloud">
     {% for tag in tagcloud %}
       <li><a
-      {% if user_id %}
-      href="{{ site.url }}/user/{{ user_id }}/tag/{{ tag.tagname|urlencode }}/"
+      {% if subscription_id %}
+      href="{{ site.url }}/subscription/{{ subscription_id }}/tag/{{ tag.tagname|urlencode }}/"
       {% else %}
       href="{{ site.url }}/tag/{{ tag.tagname|urlencode }}/"
       {% endif %}
@@ -194,7 +194,7 @@ title="{% trans "feed" %}"
 {% endif %}
 >
 <img src="{{ STATIC_URL }}feedjack/default/img/feed.png" alt="feed"></a>
-<a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}"
+<a class="nombre" href="{{ site.url }}/subscription/{{ feed.feed.id }}"
 title="{{ feed.feed.title }}">{{ feed.name }}</a></li>
 {% endfor %}
 </ul>
@@ -222,8 +222,8 @@ title="{{ feed.feed.title }}">{{ feed.name }}</a></li>
 {% if has_next %}
 <li><a href="?page={{ next }}">&gt;&gt;</a></li>
 {% endif %}
-{% if user %}
-<li class="username"><a href="{{ user.feed.link }}">{{ user.name }}</a></li>
+{% if subscription %}
+<li class="username"><a href="{{ subscription.feed.link }}">{{ subscription.name }}</a></li>
 {% endif %}
 {% if tag %}
 <li class="tagname">{{ tag.name }}</li>

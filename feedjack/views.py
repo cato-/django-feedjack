@@ -85,7 +85,7 @@ def opml(request):
     return blogroll(request, 'opml')
 
 
-def buildfeed(request, feedclass, tag=None, user=None):
+def buildfeed(request, feedclass, tag=None, subscription=None):
     """ View that handles the feeds.
     """
 
@@ -94,7 +94,7 @@ def buildfeed(request, feedclass, tag=None, user=None):
         return response
 
     object_list = fjlib.get_paginator(site, sfeeds_ids, page=0, tag=tag, \
-      user=user)[1]
+      subscription=subscription)[1]
 
     feed = feedclass(\
         title=site.title,
@@ -121,17 +121,17 @@ def buildfeed(request, feedclass, tag=None, user=None):
         fjcache.cache_set(site, cachekey, response)
     return response
 
-def rssfeed(request, tag=None, user=None):
+def rssfeed(request, tag=None, subscription=None):
     """ Generates the RSS2 feed.
     """
-    return buildfeed(request, feedgenerator.Rss201rev2Feed, tag, user)
+    return buildfeed(request, feedgenerator.Rss201rev2Feed, tag, subscription)
 
-def atomfeed(request, tag=None, user=None):
+def atomfeed(request, tag=None, subscription=None):
     """ Generates the Atom 1.0 feed. 
     """
-    return buildfeed(request, feedgenerator.Atom1Feed, tag, user)
+    return buildfeed(request, feedgenerator.Atom1Feed, tag, subscription)
 
-def mainview(request, tag=None, user=None, group=None, newer=None, asc=None):
+def mainview(request, tag=None, subscription=None, group=None, newer=None, asc=None):
     """ View that handles all page requests.
     """
 
@@ -139,7 +139,7 @@ def mainview(request, tag=None, user=None, group=None, newer=None, asc=None):
     if response:
         return response
 
-    ctx = RequestContext(request, fjlib.page_context(request, site, tag, user, group, newer, asc, (sfeeds_obj, \
+    ctx = RequestContext(request, fjlib.page_context(request, site, tag, subscription, group, newer, asc, (sfeeds_obj, \
       sfeeds_ids)))
 
     response = render_to_response('feedjack/%s/post_list.html' % \

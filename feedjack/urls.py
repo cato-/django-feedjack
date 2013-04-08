@@ -18,15 +18,15 @@ urlpatterns = patterns('',
     url(r'^feed/rss/$', views.rssfeed, name="feed-rss"),
     url(r'^feed/atom/$', views.atomfeed),
 
-    url(r'^feed/user/(?P<user>\d+)/tag/(?P<tag>.*)/$', RedirectView.as_view(url='/feed/atom/user/%(user)s/tag/%(tag)s/')),
-    url(r'^feed/user/(?P<user>\d+)/$', RedirectView.as_view(url='/feed/atom/user/%(user)s/')),
+    url(r'^feed/subscription/(?P<subscription>\d+)/tag/(?P<tag>.*)/$', RedirectView.as_view(url='/feed/atom/subscription/%(subscription)s/tag/%(tag)s/')),
+    url(r'^feed/subscription/(?P<subscription>\d+)/$', RedirectView.as_view(url='/feed/atom/subscription/%(subscription)s/')),
     url(r'^feed/tag/(?P<tag>.*)/$', RedirectView.as_view(url='/feed/atom/tag/%(tag)s/')),
 
-    url(r'^feed/atom/user/(?P<user>\d+)/tag/(?P<tag>.*)/$', views.atomfeed),
-    url(r'^feed/atom/user/(?P<user>\d+)/$', views.atomfeed),
+    url(r'^feed/atom/subscription/(?P<subscription>\d+)/tag/(?P<tag>.*)/$', views.atomfeed),
+    url(r'^feed/atom/subscription/(?P<subscription>\d+)/$', views.atomfeed),
     url(r'^feed/atom/tag/(?P<tag>.*)/$', views.atomfeed),
-    url(r'^feed/rss/user/(?P<user>\d+)/tag/(?P<tag>.*)/$', views.rssfeed),
-    url(r'^feed/rss/user/(?P<user>\d+)/$', views.rssfeed),
+    url(r'^feed/rss/subscription/(?P<subscription>\d+)/tag/(?P<tag>.*)/$', views.rssfeed),
+    url(r'^feed/rss/subscription/(?P<subscription>\d+)/$', views.rssfeed),
     url(r'^feed/rss/tag/(?P<tag>.*)/$', views.rssfeed),
 
     url(r'^settings/feed/new/$', newviews.CreateSubscriber.as_view(), name="settings-feedcreate"),
@@ -35,8 +35,8 @@ urlpatterns = patterns('',
 
     url(r'^posts/$', newviews.PostView.as_view(), name="post-all"),
 
-    url(r'^user/(?P<user>\d+)/tag/(?P<tag>.*)/$', views.mainview),
-    url(r'^user/(?P<user>\d+)/$', views.mainview),
+    url(r'^subscription/(?P<subscription>\d+)/tag/(?P<tag>.*)/$', views.mainview),
+    url(r'^subscription/(?P<subscription>\d+)/$', views.mainview),
     url(r'^tag/(?P<tag>.*)/$', views.mainview, name="post-tag"),
 
     url(r'^group/(?P<group>\d+)/$', views.mainview),

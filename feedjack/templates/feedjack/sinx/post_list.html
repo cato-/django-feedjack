@@ -82,8 +82,8 @@ Insert here your google ad code ;)
 <p id="cloud">
 {% for tag in tagcloud %}
       <a
-      {% if user_id %}
-      href="{{ site.url }}/user/{{ user_id }}/tag/{{ tag.tagname|urlencode }}/"
+      {% if subscription_id %}
+      href="{{ site.url }}/subscription/{{ subscription_id }}/tag/{{ tag.tagname|urlencode }}/"
       {% else %}
       href="{{ site.url }}/tag/{{ tag.tagname|urlencode }}/"
       {% endif %}
@@ -98,7 +98,7 @@ Insert here your google ad code ;)
 <p>
 <a href="{{ feed.feed.url }}"
    title="{{ feed.feed.title }}"><img src="{{ STATIC_URL }}/smiley.png" alt=":)"></a>
-<a class="nombre" href="{{ site.url }}/user/{{ feed.feed.id }}"
+<a class="nombre" href="{{ site.url }}/subscription/{{ feed.feed.id }}"
   title="{{ feed.feed.title }}">{{ feed.name }}</a>
 </p>
 {% endfor %}
