@@ -1,0 +1,18 @@
+{% load i18n %}
+<div id="paginate">
+{% if has_previous %}
+<div class="pageitem"><a href="?page={{ previous }}">&lt;&lt;</a></div>
+{% endif %}
+<div class="pageitem">
+  Page {{ page }} of {{ pages }} ({% blocktrans count hits as posts %}{{ posts }} post{% plural %}{{ posts }} posts{% endblocktrans %})
+</div>
+{% if subscription %}
+<div class="pageitem username"><a href="{{ subscription.feed.link }}">{{ subscription.name }}</a></div>
+{% endif %}
+{% if tag %}
+<div class="pageitem tagname">{{ tag.name }}</div>
+{% endif %}
+{% if has_next %}
+<div class="pageitem"><a href="?page={{ next }}">&gt;&gt;</a></div>
+{% endif %}
+</div>
