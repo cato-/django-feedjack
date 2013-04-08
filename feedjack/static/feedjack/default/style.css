@@ -36,17 +36,6 @@ div {
     padding: 5px;
     text-align: right;
 }
-#paginate {
-    margin-bottom: 15px;
-    margin-left: 0px;
-    margin-top: 5px;
-    padding-left: 0;
-    text-align: left;
-    vertical-align: middle;
-    float: left;
-    width: 60%;
-    color: black;
-}
 #buttons {
     text-align: right;
     float: right;
@@ -309,4 +298,36 @@ div.tags li {
     line-height: 1.7em;
     margin-left: 3px;
     margin-right: 3px;
+}
+
+
+
+
+#paginate {
+    padding: 2em 0;
+    text-align: center;
+    vertical-align: middle;
+    color: black;
+	margin: 0 auto;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: white;
+}
+#paginate div.pageitem { 
+    display: inline;
+    margin: 2px;
+    padding: 10px;
+    background-color: #fbfbfb;
+    border: 2px solid #ddd;
+    line-height: 1.7em;
+    margin-left: 3px;
+    margin-right: 3px;
+    text-align: center;
+    vertical-align: middle;
+}
+#paginate div.tagname {
+    font-weight: bold;
+}
+#paginate a:link {
+    color: #4C6B46;
 }
