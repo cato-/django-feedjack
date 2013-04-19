@@ -1,0 +1,11 @@
+{
+  "feedlist": {
+    "step": 10
+  },
+  "django": {
+    "settings": "feadme_project.settings"
+  },
+  "updater": {
+    "step": 10
+  }
+}

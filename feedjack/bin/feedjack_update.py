@@ -14,6 +14,7 @@ import datetime
 import socket
 import traceback
 import sys
+import dateutil.parser
 
 import feedparser
 
@@ -25,6 +26,7 @@ except ImportError:
 VERSION = '0.9.16'
 URL = 'http://www.feedjack.org/'
 USER_AGENT = 'Feedjack %s - %s' % (VERSION, URL)
+SPIDERAGENT = 'feadme'
 SLOWFEED_WARNING = 10
 ENTRY_NEW, ENTRY_UPDATED, ENTRY_SAME, ENTRY_ERR = range(4)
 FEED_OK, FEED_SAME, FEED_ERRPARSE, FEED_ERRHTTP, FEED_ERREXC = range(5)
@@ -50,10 +52,15 @@ def prints(tstr):
                          'replace')))
     sys.stdout.flush()
 
+import pytz
+
 def mtime(ttime):
     """ datetime auxiliar function.
     """
-    return datetime.datetime.fromtimestamp(time.mktime(ttime))
+    try:
+        return datetime.datetime(*ttime[0:5], microsecond=int(ttime[6]), tzinfo=pytz.utc)
+    except TypeError:
+        return dateutil.parser.parse(ttime)
 
 class ProcessEntry:
     def __init__(self, feed, options, entry, postdict, fpf):
@@ -194,7 +201,7 @@ class ProcessEntry:
                 elif self.fpf.has_key('modified') and self.fpf.modified:
                     date_modified = mtime(self.fpf.modified)
             if not date_modified:
-                date_modified = datetime.datetime.now()
+                date_modified = mtime(time.gmtime())
             # post already in DB?
             try:
                 tobj = models.Post.objects.get(feed=self.feed, guid=guid)
@@ -258,7 +265,7 @@ class ProcessFeed:
                     prints('[%d] Feed has not changed since ' \
                            'last check: %s' % (self.feed.id,
                                                self.feed.feed_url))
-                self.feed.last_checked = datetime.datetime.now()
+                self.feed.last_checked = mtime(time.gmtime())
                 self.feed.save()
                 return FEED_SAME, ret_values
 
@@ -267,7 +274,7 @@ class ProcessFeed:
                 prints('[%d] !HTTP_ERROR! %d: %s' % (self.feed.id,
                                                      self.fpf.status,
                                                      self.feed.feed_url))
-                self.feed.last_checked = datetime.datetime.now()
+                self.feed.last_checked = mtime(time.gmtime())
                 self.feed.save()
                 return FEED_ERRHTTP, ret_values
 
@@ -290,7 +297,7 @@ class ProcessFeed:
         self.feed.title = self.fpf.feed.get('title', '')[0:254]
         self.feed.tagline = self.fpf.feed.get('tagline', '')
         self.feed.link = self.fpf.feed.get('link', '')
-        self.feed.last_checked = datetime.datetime.now()
+        self.feed.last_checked = mtime(time.gmtime())
 
         if False and self.options.verbose:
             prints(u'[%d] Feed info for: %s\n' \
@@ -334,6 +341,124 @@ class ProcessFeed:
 
         return FEED_OK, ret_values
 
+import requests
+
+from requests.structures import CaseInsensitiveDict
+
+class HttpGetter(object):
+
+    def http_get(self, url, headers=None):
+        """
+          returns (status, header, content)
+          status: int
+          header: dict
+          content: string
+        """
+        hdrs = CaseInsensitiveDict()
+        if headers:
+            hdrs.update(headers)
+        if not 'user-agent' in hdrs:
+            hdrs['user-agent'] = USER_AGENT
+        print "http_get:", url
+        r = requests.get(url, headers=hdrs)
+        return (r.status_code, r.headers, r.text)
+
+import robotparser
+import urlparse
+import time
+
+class RobotsTxtWatcherMixin(object):
+    # robotstxt_url => robotparser
+    cache = None
+
+    def __init__(self):
+        self.cache = {}
+
+    def can_fetch(self, url):
+        # construct URL of robots.txt
+        parts = urlparse.urlparse(url)
+        parts2=urlparse.ParseResult(parts.scheme, parts.netloc, '/robots.txt', None, None, None)
+        robotsurl = parts2.geturl()
+        print url, robotsurl
+        # create new parser, if there is none in cache
+        if robotsurl not in self.cache:
+            rp = robotparser.RobotFileParser()
+            rp.set_url(robotsurl)
+            self.cache[robotsurl] = rp
+        # fetch and parse robots.txt if existing one is too old
+        if time.time() - self.cache[robotsurl].mtime() > 60*60*24:
+            try:
+                status, header, content = self.http_get(robotsurl)
+            except:
+                return False
+            if status >= 400:
+                return True
+            rp.parse(content)
+            rp.modified()
+        # lookup current given url with current parser
+        return self.cache[robotsurl].can_fetch(SPIDERAGENT, url)
+
+from django.utils.http import http_date
+
+JOB_DENY_ROBOTS, JOB_NOTFOUND, JOB_SERVERERROR, JOB_UNMODIFIED, JOB_SUCCESS_NOTHINGNEW, JOB_SUCCESS = range(6)
+
+class BaseDispatcher(RobotsTxtWatcherMixin, HttpGetter):
+
+    def __init__(self, options):
+        self.options = options
+        super(BaseDispatcher, self).__init__()
+
+    def add_job(self, feed_obj):
+        self.run_job(feed_obj)
+
+    def job_result(self, feed_obj, result):
+        print feed_obj, "was fetched with result", result
+
+    def run_job(self, feed_obj):
+        if not self.can_fetch(feed_obj.feed_url):
+            self.job_result(feed_obj, JOB_DENY_ROBOTS)
+            return
+
+        headers = {}
+        if feed_obj.etag:
+            headers['Etag'] = feed_obj.etag
+        if feed_obj.last_modified: # RFC-2616 14.25
+            headers['If-Modified-Since'] = http_date(float(feed_obj.last_modified.strftime("%s")))
+        status, header, content = self.http_get(feed_obj.feed_url, headers)
+
+        if status < 300:
+            num_new_posts = self.parse_feed(feed_obj, header, content)
+            if num_new_posts > 0:
+                self.job_result(feed_obj, JOB_SUCCESS)
+            else:
+                self.job_result(feed_obj, JOB_SUCCESS_NOTHINGNEW)
+        elif status < 400:
+            self.job_result(feed_obj, JOB_UNMODIFIED)
+        elif status < 500:
+            self.job_result(feed_obj, JOB_NOTFOUND)
+        else:
+            self.job_result(feed_obj, JOB_SERVERERROR)
+
+    def parse_feed(self, feed_obj, header, content):
+        pfeed = ProcessFeed(feed_obj, self.options)
+        ret_feed, ret_entries = pfeed.process()
+        del pfeed
+        return ret_feed, ret_entries
+
+    def poll(self):
+        pass
+
+class ThreadPoolDispatcher(BaseDispatcher):
+    def __init__(self, options, n_threads):
+        super(ThreadPoolDispatcher, self).__init__(options)
+        self.tpool = threadpool.ThreadPool(num_threads)
+
+    def add_job(self, feed_obj):
+        """ adds a feed processing job to the pool
+        """
+        req = threadpool.WorkRequest(self.run_job, (feed_obj,))
+        self.tpool.putRequest(req)
+
 class Dispatcher:
     def __init__(self, options, num_threads):
         self.options = options
@@ -365,7 +490,7 @@ class Dispatcher:
             self.tpool = threadpool.ThreadPool(num_threads)
         else:
             self.tpool = None
-        self.time_start = datetime.datetime.now()
+        self.time_start = mtime(time.gmtime())
 
 
     def add_job(self, feed):
@@ -468,7 +593,7 @@ def main():
       dest='verbose', default=False, help='Verbose output.')
     parser.add_option('-t', '--timeout', type='int', default=10,
       help='Wait timeout in seconds when connecting to feeds.')
-    parser.add_option('-w', '--workerthreads', type='int', default=10,
+    parser.add_option('-w', '--workerthreads', type='int', default=0,
       help='Worker threads that will fetch feeds in parallel.')
     options = parser.parse_args()[0]
     if options.settings:
@@ -481,7 +606,10 @@ def main():
     socket.setdefaulttimeout(options.timeout)
 
     # our job dispatcher
-    disp = Dispatcher(options, options.workerthreads)
+    if options.workerthreads:
+        disp = ThreadPoolDispatcher(options, options.workerthreads)
+    else:
+        disp = BaseDispatcher(options)
     
     prints('* BEGIN: %s' % (unicode(datetime.datetime.now()),))
 
